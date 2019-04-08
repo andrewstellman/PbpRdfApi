@@ -6,5 +6,12 @@
 
   <ItemGroup>
     <Compile Remove="Class1.cs" />
+    <Compile Remove="FactoryBase.cs" />
+    <Compile Remove="Team.cs" />
+    <Compile Remove="Roster.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="dotNetRDF" Version="2.2.0" />
+    <PackageReference Include="InCube.Core" Version="1.0.0" />
   </ItemGroup>
 </Project>
