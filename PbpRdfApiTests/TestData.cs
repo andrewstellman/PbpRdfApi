@@ -15,22 +15,22 @@ namespace PbpRdfApiTests
             {
                 var inMemoryManager = new InMemoryManager();
                 var persistentTripleStore = new PersistentTripleStore(inMemoryManager);
-                persistentTripleStore.Add(Graph);
+                persistentTripleStore.Add(Graph("two-wnba-2018-playoff-games.ttl", "http://stellman-greene.com/pbprdf/wnba-2018-playoffs"));
+                persistentTripleStore.Add(Graph("ontology.ttl", "http://stellman-greene.com/pbprdf/ontology"));
                 persistentTripleStore.Flush();
                 return persistentTripleStore;
             }
         }
 
-        public static IGraph Graph
+        private static IGraph Graph(string resourceFilename, string uri)
         {
-            get
-            {
-                var ttl = GetStreamResource("two-wnba-2018-playoff-games.ttl");
-                IGraph graph = new QueryableGraph();
-                var ttlparser = new TurtleParser();
-                ttlparser.Load(graph, ttl);
-                return graph;
-            }
+
+            IGraph graph = new QueryableGraph();
+            graph.BaseUri = new Uri(uri);
+            var ttlparser = new TurtleParser();
+            var ttl = GetStreamResource(resourceFilename);
+            ttlparser.Load(graph, ttl);
+            return graph;
         }
 
         static TextReader GetStreamResource(string filename)

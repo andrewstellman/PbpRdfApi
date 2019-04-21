@@ -17,9 +17,11 @@
     <None Remove="TestData\2018-08-28_Mystics_at_Dream.ttl" />
     <None Remove="TestData\wnba-2018-playoffs.ttl" />
     <None Remove="TestData\two-wnba-2018-playoff-games.ttl" />
+    <None Remove="TestData\ontology.ttl" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestData\two-wnba-2018-playoff-games.ttl" />
+    <EmbeddedResource Include="TestData\ontology.ttl" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="TestData\" />
