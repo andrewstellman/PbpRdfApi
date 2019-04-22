@@ -35,13 +35,15 @@ namespace PbpRdfApi
             var query = $@"BASE <http://stellman-greene.com/> 
 PREFIX pbprdf: <pbprdf#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-SELECT * {{
-  ?game a pbprdf:Game .
-  ?game rdfs:label ?label .
-  OPTIONAL {{ ?game pbprdf:gameLocation ?gameLocation . }}
-  ?game pbprdf:gameTime ?gameTime .
-  ?game pbprdf:homeTeam ?homeTeam .
-  ?game pbprdf:awayTeam ?awayTeam .
+SELECT ?game ?gameTime ?homeTeam ?awayTeam ?gameLocation {{
+    GRAPH ?graph {{
+        ?game a pbprdf:Game .
+        ?game rdfs:label ?label .
+        OPTIONAL {{ ?game pbprdf:gameLocation ?gameLocation . }}
+        ?game pbprdf:gameTime ?gameTime .
+        ?game pbprdf:homeTeam ?homeTeam .
+        ?game pbprdf:awayTeam ?awayTeam .
+    }}
 }} VALUES (?game) {{
  (<{gameIri}>) 
 }}";
@@ -74,9 +76,11 @@ SELECT * {{
                 (_tripleStore.ExecuteQuery($@"PREFIX pbprdf: <http://stellman-greene.com/pbprdf#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT ?player ?label {{
-  ?game a pbprdf:Game .
-  ?game pbprdf:has{rosterType}TeamRoster / pbprdf:hasPlayer ?player .
-  ?player rdfs:label ?label .
+    GRAPH ?graph {{
+        ?game a pbprdf:Game .
+        ?game pbprdf:has{rosterType}TeamRoster / pbprdf:hasPlayer ?player .
+        ?player rdfs:label ?label .
+    }}
 }} VALUES (?game) {{
  (<{gameIri}>) 
 }}")

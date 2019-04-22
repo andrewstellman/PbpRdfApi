@@ -7,7 +7,7 @@ using PbpRdfApi;
 namespace PbpRdfApiTests
 {
     [TestClass]
-    public class GameTest
+    public class GameTests
     {
         [TestMethod]
         public void ReadWingsAtMercuryGame()

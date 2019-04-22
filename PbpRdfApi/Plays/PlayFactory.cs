@@ -3,7 +3,7 @@ using System.Linq;
 using VDS.RDF;
 using VDS.RDF.Query;
 
-namespace PbpRdfApi
+namespace PbpRdfApi.Plays
 {
     /// <summary>
     /// Factory to populate Event objects from an RDF TripleStore
@@ -39,30 +39,33 @@ SELECT ?play ?type ?graph {{
         ?play pbprdf:eventNumber ""{eventNumber}""^^xsd:int .
         ?play a ?type .
     }}
-    GRAPH ?ontologyGraph {{
-        ?type rdfs:subClassOf pbprdf:Play .
-    }}
 }}";
 
             SparqlResultSet results = _tripleStore.ExecuteQuery(query) as SparqlResultSet;
-            if (results.Count < 1) throw new NotFoundException($"Unable to find play #{eventNumber} in game <{gameIri}>");
-            var result = results.First();
+            if (results.Count < 1) throw new NotFoundException($"Unable to find event #{eventNumber} in game <{gameIri}>");
 
-            var graphUri = result["graph"];
+            var graphUri = results.First()["graph"];
             var graph = _tripleStore.Graphs
                 .First(g => g.BaseUri.ToString() == graphUri.ToString());
 
-            var play = result["play"];
-            var triples = graph.GetTriplesWithSubject(play);
+            var playIris = results.Select(r => r["play"].ToString()).Distinct();
+            if (playIris.Count() != 1) throw new InvalidDataException($"{playIris.Count()} plays found with event #{eventNumber} in game <{gameIri}>");
+            var playNode = results.First()["play"];
+            var triples = graph.GetTriplesWithSubject(playNode).ToList<Triple>();
 
-            var playType = result["type"].ToString();
-            switch (playType)
-            {
-                case "http://stellman-greene.com/pbprdf#JumpBall":
-                    return new JumpBall(triples);
-                default:
-                    throw new InvalidDataException($"Invalid type <{playType}> for play #{eventNumber} in game <{gameIri}> ");
-            }
+            var playTypes = results.Select(r => r["type"].ToString().StripPbpRdfPrefix()).ToList<string>();
+
+            if (playTypes.Contains("JumpBall")) return new JumpBall(triples);
+
+            // pbprdf:Block is an rdf:subClassOf pbprdf:Shot
+            // a pbbrdf:Block play is rdf:type pbprdf:Shot, so we need to test for block first
+            if (playTypes.Contains("Block")) return new Block(triples);
+            if (playTypes.Contains("Shot")) return new Shot(triples);
+
+
+
+            var s = playTypes.Count == 1 ? "" : "s";
+            throw new InvalidDataException($"Invalid type{s} {string.Join(", ", playTypes)} for play #{eventNumber} in game <{gameIri}> ");
         }
     }
 }

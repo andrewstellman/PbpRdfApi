@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VDS.RDF;
 
-namespace PbpRdfApi
+namespace PbpRdfApi.Plays
 {
     public class JumpBall : Play
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using VDS.RDF;
 using System.Linq;
 
-namespace PbpRdfApi
+namespace PbpRdfApi.Plays
 {
     /// <summary>
     /// Superclass for all plays.
@@ -109,19 +109,19 @@ namespace PbpRdfApi
 
         public Play(IEnumerable<Triple> triples)
         {
-            _triples = new List<Triple>(triples);
+            _triples = triples.ToList<Triple>();
 
             Iri = _triples.First().Subject.ToString();
 
             foreach (Triple triple in _triples)
             {
-                int TripleIntValue()
+                int TripleIntValue(int defaultValue)
                 {
-                    int i = -1;
+                    int i = defaultValue;
                     if (triple.Object is LiteralNode)
                     {
                         var node = triple.Object as LiteralNode;
-                        if (int.TryParse(node.Value, out i)) return i;
+                        int.TryParse(node.Value, out i);
                     }
                     return i;
                 }
@@ -138,16 +138,16 @@ namespace PbpRdfApi
                         Time = triple.Object.ToString();
                         break;
                     case "period":
-                        Period = TripleIntValue();
+                        Period = TripleIntValue(-1);
                         break;
                     case "secondsIntoGame":
-                        SecondsIntoGame = TripleIntValue();
+                        SecondsIntoGame = TripleIntValue(-1);
                         break;
                     case "secondsLeftInPeriod":
-                        SecondsLeftInPeriod = TripleIntValue();
+                        SecondsLeftInPeriod = TripleIntValue(-1);
                         break;
                     case "eventNumber":
-                        EventNumber = TripleIntValue();
+                        EventNumber = TripleIntValue(-1);
                         break;
                     case "previousEvent":
                         PreviousEventIri = triple.Object.ToString();
@@ -156,16 +156,16 @@ namespace PbpRdfApi
                         NextEventIri = triple.Object.ToString();
                         break;
                     case "secondsSincePreviousEvent":
-                        SecondsSincePreviousEvent = TripleIntValue();
+                        SecondsSincePreviousEvent = TripleIntValue(-1);
                         break;
                     case "secondsUntilNextEvent":
-                        SecondsUntilNextEvent = TripleIntValue();
+                        SecondsUntilNextEvent = TripleIntValue(-1);
                         break;
                     case "homeScore":
-                        HomeScore = TripleIntValue();
+                        HomeScore = TripleIntValue(-1);
                         break;
                     case "awayScore":
-                        AwayScore = TripleIntValue();
+                        AwayScore = TripleIntValue(-1);
                         break;
                     case "http://www.w3.org/2000/01/rdf-schema#label":
                         Label = triple.Object.ToString();

@@ -14,4 +14,7 @@
     <PackageReference Include="dotNetRDF" Version="2.2.0" />
     <PackageReference Include="InCube.Core" Version="1.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Plays\" />
+  </ItemGroup>
 </Project>
