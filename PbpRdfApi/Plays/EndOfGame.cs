@@ -6,8 +6,6 @@ namespace PbpRdfApi.Plays
 {
     public class EndOfGame : Play
     {
-        public EndOfGame(IEnumerable<Triple> triples) : base(triples)
-        {
-        }
+        public EndOfGame(IEnumerable<Triple> triples) : base(triples) { }
     }
 }

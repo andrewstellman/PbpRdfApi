@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using VDS.RDF;
 using VDS.RDF.Query;
@@ -55,14 +56,37 @@ SELECT ?play ?type ?graph {{
 
             var playTypes = results.Select(r => r["type"].ToString().StripPbpRdfPrefix()).ToList<string>();
 
-            if (playTypes.Contains("JumpBall")) return new JumpBall(triples);
+            return ReturnPlayType(playTypes, triples, eventNumber, gameIri);
+        }
 
-            // pbprdf:Block is an rdf:subClassOf pbprdf:Shot
-            // a pbbrdf:Block play is rdf:type pbprdf:Shot, so we need to test for block first
+        /// <summary>
+        /// Casts the play as a subclass of Play.
+        /// </summary>
+        /// <returns>A subclass of Play populated with data from the play triples.</returns>
+        /// <param name="playTypes">The play types extracted from rdf:type triples and stripled of the pbprdf: prefixes.</param>
+        /// <param name="triples">The triples for the play.</param>
+        /// <param name="eventNumber">The event number (only for an exception message).</param>
+        /// <param name="gameIri">The game IRI (only for an exception message).</param>
+        private Play ReturnPlayType(List<string> playTypes, IEnumerable<Triple> triples, int eventNumber, string gameIri)
+        {
+            if (playTypes.Contains("Ejection")) return new Ejection(triples);
+            if (playTypes.Contains("EndOfGame")) return new EndOfGame(triples);
+            if (playTypes.Contains("EndOfPeriod")) return new EndOfPeriod(triples);
+            if (playTypes.Contains("Enters")) return new Enters(triples);
+            if (playTypes.Contains("FiveSecondViolation")) return new FiveSecondViolation(triples);
+            if (playTypes.Contains("Foul")) return new Foul(triples);
+            if (playTypes.Contains("JumpBall")) return new JumpBall(triples);
+            if (playTypes.Contains("Rebound")) return new Rebound(triples);
+            if (playTypes.Contains("TechnicalFoul")) return new TechnicalFoul(triples);
+            if (playTypes.Contains("Timeout")) return new Timeout(triples);
+            if (playTypes.Contains("Turnover")) return new Turnover(triples);
+
+            /* 
+             * pbprdf:Block is an rdf:subClassOf pbprdf:Shot
+             * a pbbrdf:Block play is rdf:type pbprdf:Shot, so we need to test for block first
+             */
             if (playTypes.Contains("Block")) return new Block(triples);
             if (playTypes.Contains("Shot")) return new Shot(triples);
-
-
 
             var s = playTypes.Count == 1 ? "" : "s";
             throw new InvalidDataException($"Invalid type{s} {string.Join(", ", playTypes)} for play #{eventNumber} in game <{gameIri}> ");

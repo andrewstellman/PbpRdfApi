@@ -6,8 +6,6 @@ namespace PbpRdfApi.Plays
 {
     public class EndOfPeriod : Play
     {
-        public EndOfPeriod(IEnumerable<Triple> triples) : base(triples)
-        {
-        }
+        public EndOfPeriod(IEnumerable<Triple> triples) : base(triples) { }
     }
 }

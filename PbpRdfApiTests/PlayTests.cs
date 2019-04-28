@@ -23,8 +23,8 @@ namespace PbpRdfApiTests
             Assert.AreEqual(jumpBall.Period, 1);
             Assert.AreEqual(jumpBall.SecondsIntoGame, 0);
             Assert.AreEqual(jumpBall.SecondsLeftInPeriod, 600);
-            Assert.AreEqual(jumpBall.SecondsUntilNextEvent, 15);
             Assert.AreEqual(jumpBall.SecondsSincePreviousEvent, 0);
+            Assert.AreEqual(jumpBall.SecondsUntilNextEvent, 15);
             Assert.AreEqual(jumpBall.NextEventIri, "http://stellman-greene.com/pbprdf/games/2018-08-21_Wings_at_Mercury/2");
             Assert.IsNull(jumpBall.PreviousEventIri);
             Assert.AreEqual(jumpBall.HomePlayerIri, "http://stellman-greene.com/pbprdf/players/Brittney_Griner");
@@ -50,13 +50,59 @@ namespace PbpRdfApiTests
             Assert.AreEqual(block.Period, 2);
             Assert.AreEqual(block.SecondsIntoGame, 828);
             Assert.AreEqual(block.SecondsLeftInPeriod, 372);
-            Assert.AreEqual(block.SecondsUntilNextEvent, 2);
             Assert.AreEqual(block.SecondsSincePreviousEvent, 0);
+            Assert.AreEqual(block.SecondsUntilNextEvent, 2);
             Assert.AreEqual(block.Points, 0);
             Assert.AreEqual(block.PreviousEventIri, "http://stellman-greene.com/pbprdf/games/2018-08-21_Wings_at_Mercury/129");
             Assert.AreEqual(block.NextEventIri, "http://stellman-greene.com/pbprdf/games/2018-08-21_Wings_at_Mercury/131");
             Assert.AreEqual(block.PlayerIri, "http://stellman-greene.com/pbprdf/players/Allisha_Gray");
             Assert.AreEqual(block.BlockedByPlayerIri, "http://stellman-greene.com/pbprdf/players/Devereaux_Peters");
+        }
+
+        [TestMethod]
+        public void EndOfPeriodTest()
+        {
+            var gameEventFactory = new PlayFactory(TestData.TripleStore);
+            var gameIri = "http://stellman-greene.com/pbprdf/games/2018-09-04_Mystics_at_Dream";
+            var endOfPeriod = gameEventFactory.Play(gameIri, 370) as EndOfPeriod;
+            Assert.AreEqual(endOfPeriod.Iri, "http://stellman-greene.com/pbprdf/games/2018-09-04_Mystics_at_Dream/370");
+            Assert.AreEqual(endOfPeriod.Label, "Dream: End of the 4th Quarter");
+            Assert.AreEqual(endOfPeriod.GameIri, gameIri);
+            Assert.AreEqual(endOfPeriod.TeamIri, "http://stellman-greene.com/pbprdf/teams/Dream");
+            Assert.AreEqual(endOfPeriod.EventNumber, 370);
+            Assert.AreEqual(endOfPeriod.Time, "0.0");
+            Assert.AreEqual(endOfPeriod.HomeScore, 81);
+            Assert.AreEqual(endOfPeriod.AwayScore, 86);
+            Assert.AreEqual(endOfPeriod.Period, 4);
+            Assert.AreEqual(endOfPeriod.SecondsIntoGame, 2400);
+            Assert.AreEqual(endOfPeriod.SecondsLeftInPeriod, 0);
+            Assert.AreEqual(endOfPeriod.SecondsSincePreviousEvent, 2);
+            Assert.AreEqual(endOfPeriod.SecondsUntilNextEvent, 0);
+            Assert.AreEqual(endOfPeriod.PreviousEventIri, "http://stellman-greene.com/pbprdf/games/2018-09-04_Mystics_at_Dream/369");
+            Assert.AreEqual(endOfPeriod.NextEventIri, "http://stellman-greene.com/pbprdf/games/2018-09-04_Mystics_at_Dream/371");
+        }
+
+        [TestMethod]
+        public void EndOfGameTest()
+        {
+            var gameEventFactory = new PlayFactory(TestData.TripleStore);
+            var gameIri = "http://stellman-greene.com/pbprdf/games/2018-09-04_Mystics_at_Dream";
+            var endOfPeriod = gameEventFactory.Play(gameIri, 371) as EndOfGame;
+            Assert.AreEqual(endOfPeriod.Iri, "http://stellman-greene.com/pbprdf/games/2018-09-04_Mystics_at_Dream/371");
+            Assert.AreEqual(endOfPeriod.Label, "Dream: End of Game");
+            Assert.AreEqual(endOfPeriod.GameIri, gameIri);
+            Assert.AreEqual(endOfPeriod.TeamIri, "http://stellman-greene.com/pbprdf/teams/Dream");
+            Assert.AreEqual(endOfPeriod.EventNumber, 371);
+            Assert.AreEqual(endOfPeriod.Time, "0.0");
+            Assert.AreEqual(endOfPeriod.HomeScore, 81);
+            Assert.AreEqual(endOfPeriod.AwayScore, 86);
+            Assert.AreEqual(endOfPeriod.Period, 4);
+            Assert.AreEqual(endOfPeriod.SecondsIntoGame, 2400);
+            Assert.AreEqual(endOfPeriod.SecondsLeftInPeriod, 0);
+            Assert.AreEqual(endOfPeriod.SecondsSincePreviousEvent, 0);
+            Assert.AreEqual(endOfPeriod.SecondsUntilNextEvent, 0);
+            Assert.AreEqual(endOfPeriod.PreviousEventIri, "http://stellman-greene.com/pbprdf/games/2018-09-04_Mystics_at_Dream/370");
+            Assert.IsNull(endOfPeriod.NextEventIri);
         }
     }
 }
