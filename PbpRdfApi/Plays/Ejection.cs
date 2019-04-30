@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using InCube.Core.Functional;
 using VDS.RDF;
 
 namespace PbpRdfApi.Plays
@@ -10,7 +11,7 @@ namespace PbpRdfApi.Plays
         /// Gets the IRI of the player that was ejected.
         /// </summary>
         /// <value>The player iri.</value>
-        public string PlayerEjectedIri { get; private set; }
+        public readonly Option<string> PlayerEjectedIri = Option<string>.None;
 
         public Ejection(IEnumerable<Triple> triples) : base(triples)
         {

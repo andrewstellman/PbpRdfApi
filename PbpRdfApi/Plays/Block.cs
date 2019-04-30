@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using InCube.Core.Functional;
 using VDS.RDF;
 
 namespace PbpRdfApi.Plays
@@ -11,7 +12,7 @@ namespace PbpRdfApi.Plays
         /// Gets the IRI of the player that blocked the shot.
         /// </summary>
         /// <value>The player iri.</value>
-        public string BlockedByPlayerIri { get; private set; }
+        public readonly Option<string> BlockedByPlayerIri = Option<string>.None;
 
         public Block(IEnumerable<Triple> triples) : base(triples)
         {

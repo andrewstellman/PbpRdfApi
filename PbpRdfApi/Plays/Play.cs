@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using VDS.RDF;
 using System.Linq;
+using InCube.Core.Functional;
 
 namespace PbpRdfApi.Plays
 {
@@ -14,25 +15,25 @@ namespace PbpRdfApi.Plays
         /// IRI of this play.
         /// </summary>
         /// <value>The play iri.</value>
-        public string Iri { get; private set; }
+        public readonly string Iri;
 
         /// <summary>
         /// IRI of the game this play occurred in.
         /// </summary>
         /// <value>The game iri.</value>
-        public string GameIri { get; private set; }
+        public readonly string GameIri;
 
         /// <summary>
         /// IRI fo the team this play is for.
         /// </summary>
         /// <value>The team iri.</value>
-        public string TeamIri { get; private set; }
+        public readonly string TeamIri;
 
         /// <summary>
         /// The game time of this play (e.g. "8:41").
         /// </summary>
         /// <value>The time.</value>
-        public string Time { get; private set; }
+        public readonly string Time;
 
         /// <summary>
         /// The period this play occrured in, including overtime (e.g.
@@ -40,67 +41,67 @@ namespace PbpRdfApi.Plays
         /// an NCAAM game overtame starts with period 3).
         /// </summary>
         /// <value>The period.</value>
-        public int Period { get; private set; }
+        public readonly Option<int> Period = Option<int>.None;
 
         /// <summary>
         /// The number of seconds into the game this play takes occurred.
         /// </summary>
         /// <value>The seconds into game.</value>
-        public int SecondsIntoGame { get; private set; }
+        public readonly Option<int> SecondsIntoGame = Option<int>.None;
 
         /// <summary>
         /// The number of seconds before the end of the period this play takes place.
         /// </summary>
         /// <value>The seconds left in period.</value>
-        public int SecondsLeftInPeriod { get; private set; }
+        public readonly Option<int> SecondsLeftInPeriod = Option<int>.None;
 
         /// <summary>
         /// Gets the sequential event number for this play.
         /// </summary>
         /// <value>The event number.</value>
-        public int EventNumber { get; private set; }
+        public readonly Option<int> EventNumber = Option<int>.None;
 
         /// <summary>
         /// Gets the IRI of the previous event in the game.
         /// </summary>
         /// <value>The previous event iri.</value>
-        public string PreviousEventIri { get; private set; }
+        public readonly Option<string> PreviousEventIri = Option<string>.None;
 
         /// <summary>
         /// Gets the IRI of the next event in the game.
         /// </summary>
         /// <value>The next event iri.</value>
-        public string NextEventIri { get; private set; }
+        public readonly Option<string> NextEventIri = Option<string>.None;
 
         /// <summary>
         /// Gets the number of seconds since the previous event.
         /// </summary>
         /// <value>The seconds since previous event.</value>
-        public int SecondsSincePreviousEvent { get; private set; }
+        public readonly Option<int> SecondsSincePreviousEvent = Option<int>.None;
 
         /// <summary>
         /// Gets the seconds until the next event.
         /// </summary>
         /// <value>The number of seconds until next event.</value>
-        public int SecondsUntilNextEvent { get; private set; }
+        public readonly Option<int> SecondsUntilNextEvent = Option<int>.None;
 
         /// <summary>
         /// Gets the score for the home team.
         /// </summary>
         /// <value>The score for the home team.</value>
-        public int HomeScore { get; private set; }
+        public readonly Option<int> HomeScore = Option<int>.None;
 
         /// <summary>
         /// Gets the score for the away team.
         /// </summary>
         /// <value>The score for the away team.</value>
-        public int AwayScore { get; private set; }
+        public readonly Option<int> AwayScore = Option<int>.None;
 
         /// <summary>
         /// The label of the play.
         /// </summary>
         /// <value>The label.</value>
-        public string Label { get; private set; }
+        public readonly Option<string> Label = Option<string>.None;
 
         /// <summary>
         /// The RDF triples for this play.
@@ -115,15 +116,14 @@ namespace PbpRdfApi.Plays
 
             foreach (Triple triple in _triples)
             {
-                int TripleIntValue(int defaultValue)
+                Option<int> TripleIntValue()
                 {
-                    int i = defaultValue;
                     if (triple.Object is LiteralNode)
                     {
                         var node = triple.Object as LiteralNode;
-                        int.TryParse(node.Value, out i);
+                        if (int.TryParse(node.Value, out int i)) return i;
                     }
-                    return i;
+                    return Option<int>.None;
                 }
 
                 switch (triple.Predicate.ToString().Replace("http://stellman-greene.com/pbprdf#", ""))
@@ -138,16 +138,16 @@ namespace PbpRdfApi.Plays
                         Time = triple.Object.ToString();
                         break;
                     case "period":
-                        Period = TripleIntValue(-1);
+                        Period = TripleIntValue();
                         break;
                     case "secondsIntoGame":
-                        SecondsIntoGame = TripleIntValue(-1);
+                        SecondsIntoGame = TripleIntValue();
                         break;
                     case "secondsLeftInPeriod":
-                        SecondsLeftInPeriod = TripleIntValue(-1);
+                        SecondsLeftInPeriod = TripleIntValue();
                         break;
                     case "eventNumber":
-                        EventNumber = TripleIntValue(-1);
+                        EventNumber = TripleIntValue();
                         break;
                     case "previousEvent":
                         PreviousEventIri = triple.Object.ToString();
@@ -156,16 +156,16 @@ namespace PbpRdfApi.Plays
                         NextEventIri = triple.Object.ToString();
                         break;
                     case "secondsSincePreviousEvent":
-                        SecondsSincePreviousEvent = TripleIntValue(-1);
+                        SecondsSincePreviousEvent = TripleIntValue();
                         break;
                     case "secondsUntilNextEvent":
-                        SecondsUntilNextEvent = TripleIntValue(-1);
+                        SecondsUntilNextEvent = TripleIntValue();
                         break;
                     case "homeScore":
-                        HomeScore = TripleIntValue(-1);
+                        HomeScore = TripleIntValue();
                         break;
                     case "awayScore":
-                        AwayScore = TripleIntValue(-1);
+                        AwayScore = TripleIntValue();
                         break;
                     case "http://www.w3.org/2000/01/rdf-schema#label":
                         Label = triple.Object.ToString();

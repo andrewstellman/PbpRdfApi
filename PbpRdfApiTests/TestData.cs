@@ -16,6 +16,7 @@ namespace PbpRdfApiTests
                 var inMemoryManager = new InMemoryManager();
                 var persistentTripleStore = new PersistentTripleStore(inMemoryManager);
                 persistentTripleStore.Add(Graph("two-wnba-2018-playoff-games.ttl", "http://stellman-greene.com/pbprdf/wnba-2018-playoffs"));
+                persistentTripleStore.Add(Graph("one-wnba-2017-playoff-game.ttl", "http://stellman-greene.com/pbprdf/wnba-2017-playoffs"));
                 persistentTripleStore.Add(Graph("ontology.ttl", "http://stellman-greene.com/pbprdf/ontology"));
                 persistentTripleStore.Flush();
                 return persistentTripleStore;

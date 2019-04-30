@@ -6,8 +6,6 @@ namespace PbpRdfApi.Plays
 {
     public class FiveSecondViolation : Play
     {
-        public FiveSecondViolation(IEnumerable<Triple> triples) : base(triples)
-        {
-        }
+        public FiveSecondViolation(IEnumerable<Triple> triples) : base(triples) { }        
     }
 }

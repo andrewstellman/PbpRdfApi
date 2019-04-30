@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using InCube.Core.Functional;
 using VDS.RDF;
 
 namespace PbpRdfApi.Plays
@@ -11,20 +12,19 @@ namespace PbpRdfApi.Plays
         /// Gets the IRI of the home player contesting the jump ball.
         /// </summary>
         /// <value>The home player iri.</value>
-        public string HomePlayerIri { get; private set; }
+        public readonly Option<string> HomePlayerIri = Option<string>.None;
 
         /// <summary>
         /// Gets the IRI of the away player contesting the jump ball.
         /// </summary>
         /// <value>The home player iri.</value>
-        public string AwayPlayerIri { get; private set; }
-
+        public readonly Option<string> AwayPlayerIri = Option<string>.None;
 
         /// <summary>
         /// Gets the IRI of the player who gained possession of the jump ball.
         /// </summary>
         /// <value>The home player iri.</value>
-        public string JumpBallGainedPossessionIri { get; private set; }
+        public readonly Option<string> JumpBallGainedPossessionIri = Option<string>.None;
 
         public JumpBall(IEnumerable<Triple> triples) : base(triples)
         {
