@@ -12,6 +12,8 @@ namespace PbpRdfApiTests
         [TestMethod]
         public void JumpBallTest()
         {
+            System.Console.WriteLine("====");
+            System.Console.WriteLine($"{System.DateTime.Now.Second}.{System.DateTime.Now.Millisecond}");
             var gameIri = "http://stellman-greene.com/pbprdf/games/2018-08-21_Wings_at_Mercury";
             var jumpBall = playFactory.Play(gameIri, 1) as JumpBall;
             Assert.AreEqual("http://stellman-greene.com/pbprdf/games/2018-08-21_Wings_at_Mercury/1", jumpBall.Iri);
@@ -32,6 +34,7 @@ namespace PbpRdfApiTests
             Assert.AreEqual("http://stellman-greene.com/pbprdf/players/Brittney_Griner", jumpBall.HomePlayerIri);
             Assert.AreEqual("http://stellman-greene.com/pbprdf/players/Liz_Cambage", jumpBall.AwayPlayerIri);
             Assert.AreEqual("http://stellman-greene.com/pbprdf/players/Kayla_Thornton", jumpBall.JumpBallGainedPossessionIri);
+            System.Console.WriteLine($"{System.DateTime.Now.Second}.{System.DateTime.Now.Millisecond}");
         }
 
         [TestMethod]
@@ -248,7 +251,6 @@ namespace PbpRdfApiTests
             Assert.AreEqual(Option<bool>.None, timeout.IsOfficial);
         }
 
-
         [TestMethod]
         public void ReboundTest()
         {
@@ -271,6 +273,35 @@ namespace PbpRdfApiTests
             Assert.AreEqual("http://stellman-greene.com/pbprdf/games/2018-09-04_Mystics_at_Dream/8", rebound.NextEventIri);
             Assert.AreEqual("http://stellman-greene.com/pbprdf/players/Ariel_Atkins", rebound.ReboundedByPlayerIri);
             Assert.AreEqual(true, rebound.IsOffensive);
+        }
+
+        [TestMethod]
+        public void FoulTest()
+        {
+            var gameIri = "http://stellman-greene.com/pbprdf/games/2017-09-06_Wings_at_Mystics";
+            var foul = playFactory.Play(gameIri, 214) as Foul;
+            Assert.AreEqual("http://stellman-greene.com/pbprdf/games/2017-09-06_Wings_at_Mystics/214", foul.Iri);
+            Assert.AreEqual("Mystics: Kristi Toliver offensive foul (Skylar Diggins-Smith draws the foul)", foul.Label);
+            Assert.AreEqual(gameIri, foul.GameIri);
+            Assert.AreEqual("http://stellman-greene.com/pbprdf/teams/Mystics", foul.TeamIri);
+            Assert.AreEqual(214, foul.EventNumber);
+            Assert.AreEqual("7:41", foul.Time);
+            Assert.AreEqual(39, foul.HomeScore);
+            Assert.AreEqual(36, foul.AwayScore);
+            Assert.AreEqual(3, foul.Period);
+            Assert.AreEqual(1339, foul.SecondsIntoGame);
+            Assert.AreEqual(461, foul.SecondsLeftInPeriod);
+            Assert.AreEqual(7, foul.SecondsSincePreviousEvent);
+            Assert.AreEqual(0, foul.SecondsUntilNextEvent);
+            Assert.AreEqual("http://stellman-greene.com/pbprdf/games/2017-09-06_Wings_at_Mystics/213", foul.PreviousEventIri);
+            Assert.AreEqual("http://stellman-greene.com/pbprdf/games/2017-09-06_Wings_at_Mystics/215", foul.NextEventIri);
+            Assert.AreEqual("http://stellman-greene.com/pbprdf/players/Kristi_Toliver", foul.CommittedByPlayerIri);
+            Assert.AreEqual("http://stellman-greene.com/pbprdf/players/Skylar_Diggins-Smith", foul.DrawnByPlayerIri);
+            Assert.AreEqual(true, foul.IsOffensive);
+            Assert.AreEqual(Option<bool>.None, foul.IsCharge);
+            Assert.AreEqual(Option<bool>.None, foul.IsShootingFoul);
+            Assert.AreEqual(Option<bool>.None, foul.IsLooseBallFoul);
+            Assert.AreEqual(Option<bool>.None, foul.IsPersonalBlockingFoul);
         }
     }
 }

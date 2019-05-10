@@ -30,6 +30,10 @@ namespace PbpRdfApi.Plays
         /// <param name="eventNumber">Event number of the event to fetch.</param>
         public Play Play(string gameIri, int eventNumber)
         {
+
+            Console.WriteLine("----");
+            Console.WriteLine($"{DateTime.Now.Second}.{DateTime.Now.Millisecond}");
+
             var query = $@"BASE <http://stellman-greene.com/> 
 PREFIX pbprdf: <pbprdf#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -41,6 +45,7 @@ SELECT ?play ?type ?graph {{
         ?play a ?type .
     }}
 }}";
+            Console.WriteLine($"{DateTime.Now.Second}.{DateTime.Now.Millisecond}");
 
             SparqlResultSet results = _tripleStore.ExecuteQuery(query) as SparqlResultSet;
             if (results.Count < 1) throw new NotFoundException($"Unable to find event #{eventNumber} in game <{gameIri}>");
@@ -52,7 +57,12 @@ SELECT ?play ?type ?graph {{
             var playIris = results.Select(r => r["play"].ToString()).Distinct();
             if (playIris.Count() != 1) throw new InvalidDataException($"{playIris.Count()} plays found with event #{eventNumber} in game <{gameIri}>");
             var playNode = results.First()["play"];
+
+            Console.WriteLine($"{DateTime.Now.Second}.{DateTime.Now.Millisecond}");
+
             var triples = graph.GetTriplesWithSubject(playNode).ToList<Triple>();
+
+            Console.WriteLine($"{DateTime.Now.Second}.{DateTime.Now.Millisecond}");
 
             var playTypes = results.Select(r => r["type"].ToString().StripPbpRdfPrefix()).ToList<string>();
 
